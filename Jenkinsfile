@@ -12,7 +12,8 @@ pipeline {
         stage('Checkout') {
             steps {
                 /* git 'https://github.com/ADirin/SEP1_Week7_Spring2025_Inclass.git' */
-                git 'https://github.com/jiakeke/SEP1-Trip.git'
+                /* git 'https://github.com/jiakeke/SEP1-Trip.git' */
+                git branch: 'main', url: 'https://github.com/jiakeke/SEP1-Trip.git'
             }
         }
         stage('Build') {
