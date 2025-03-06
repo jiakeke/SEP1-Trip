@@ -60,7 +60,7 @@ pipeline {
                             sh """
                             docker buildx build \
                               --platform linux/amd64 \
-                              --load \ 
+                              --load 
                               -t ${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG} \
                               .
                             """  // 这行非常关键，加载到本地docker cache
