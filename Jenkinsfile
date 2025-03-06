@@ -44,11 +44,30 @@ pipeline {
 
          stage('Build Docker Image') {
                     steps {
-                        // Build Docker image
+                        /* // Build Docker image */
+                        /* script { */
+                            /* docker.build("${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG}") */
+                        /* } */
+
                         script {
-                            docker.build("${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG}")
+                            // 初始化 buildx builder，防止没有可用 builder
+                            sh """
+                            docker buildx create --name mybuilder --use || true
+                            docker buildx inspect mybuilder || true
+                            """
+
+                            // 先 build 成本地镜像 (不能用普通 build，要加 --platform)
+                            sh """
+                            docker buildx build \
+                              --platform linux/amd64 \
+                              --load \ 
+                              -t ${DOCKERHUB_REPO}:${DOCKER_IMAGE_TAG} \
+                              .
+                            """  // 这行非常关键，加载到本地docker cache
                         }
+
                     }
+
                 }
                 stage('Push Docker Image to Docker Hub') {
                     steps {
